@@ -192,6 +192,16 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (window.Babel && typeof window.Babel.transformScriptTags === 'function') {
       window.Babel.transformScriptTags();
     }
+    // Add the lightweight Three.js atmosphere only after the bundled page is
+    // mounted. Keeping this outside the generated template makes the visual
+    // layer replaceable without rebundling the full landing page.
+    if (document.body && !document.querySelector('script[data-skywell-atmosphere]')) {
+      const atmosphere = document.createElement('script');
+      atmosphere.type = 'module';
+      atmosphere.src = 'skywell-atmosphere.js';
+      atmosphere.dataset.skywellAtmosphere = 'true';
+      document.body.appendChild(atmosphere);
+    }
   } catch (err) {
     setStatus('Error unpacking: ' + err.message);
     console.error('Bundle unpack error:', err);
